@@ -14,7 +14,6 @@ namespace Hooks
 		INFO("...success");
 	}
 	static bool bStoppingSprint = false;
-	//static float heldDownTimeOffset = 0.f;
 
 	void SprintHandlerHook::ProcessButton(RE::SprintHandler* a_this, RE::ButtonEvent* a_event, RE::PlayerControlsData* a_data)
 	{
