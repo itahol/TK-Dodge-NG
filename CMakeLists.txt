@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
 
 project(
-	SamplePlugin
-	VERSION 0.7.5
+	TK_Dodge_RE
+	VERSION 1.0.0
 	LANGUAGES CXX
 )
 
@@ -12,7 +12,7 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 # ## Build options
 # ########################################################################################################################
 message("Options:")
-option(AUTO_PLUGIN_DEPLOYMENT "Copy the build output and addons to env:SamplePluginOutputDir." OFF)
+option(AUTO_PLUGIN_DEPLOYMENT "Copy the build output and addons to env:${PROJECT_NAME}_OutputDir." OFF)
 option(ZIP_TO_DIST "Zip the base mod and addons to their own 7z file in dist." ON)
 option(AIO_ZIP_TO_DIST "Zip the base mod and addons to a AIO 7z file in dist." OFF)
 message("\tAuto plugin deployment: ${AUTO_PLUGIN_DEPLOYMENT}")
@@ -31,6 +31,7 @@ find_package(magic_enum CONFIG REQUIRED)
 find_package(xbyak CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_path(CLIB_UTIL_INCLUDE_DIRS "ClibUtil/utils.hpp")
+add_subdirectory("extern/DKUtil" DKUtil)
 
 target_include_directories(
 	${PROJECT_NAME}
@@ -44,6 +45,7 @@ target_link_libraries(
 	magic_enum::magic_enum
 	xbyak::xbyak
 	nlohmann_json::nlohmann_json
+	DKUtil::DKUtil
 )
 
 # https://gitlab.kitware.com/cmake/cmake/-/issues/24922#note_1371990
@@ -70,7 +72,7 @@ endif()
 # # Automatic deployment
 # #######################################################################################################################
 if(AUTO_PLUGIN_DEPLOYMENT)
-	foreach(DEPLOY_TARGET $ENV{SamplePluginOutputDir})
+	foreach(DEPLOY_TARGET $ENV{${PROJECT_NAME}_OutputDir})
 		message("Copying AIO to ${DEPLOY_TARGET}")
 		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> "${DEPLOY_TARGET}/SKSE/Plugins/"
@@ -78,7 +80,7 @@ if(AUTO_PLUGIN_DEPLOYMENT)
 		)
 	endforeach()
 
-	if(NOT DEFINED ENV{SamplePluginOutputDir})
-		message("When using AUTO_PLUGIN_DEPLOYMENT option, you need to set environment variable 'SamplePluginOutputDir'")
+	if(NOT DEFINED ENV{${PROJECT_NAME}_OutputDir})
+		message("When using AUTO_PLUGIN_DEPLOYMENT option, you need to set environment variable '${PROJECT_NAME}_OutputDir'")
 	endif()
 endif()
