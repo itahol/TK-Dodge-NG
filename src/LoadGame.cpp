@@ -13,8 +13,7 @@ namespace TKDodge
 			Settings::readSettings();
 			InputEventHandler::Register();
 			animEventHandler::RegisterForPlayer();
-			// TODO Port sprinting dodge
-			// Hooks::install();
+			Hooks::install();
 		}
 	}
 }

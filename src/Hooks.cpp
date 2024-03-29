@@ -1,6 +1,6 @@
 #include "Hooks.h"
-#include "TKRE.h"
 #include "InputEvents.h"
+#include "TKRE.h"
 #include <DKUtil/Logger.hpp>
 
 namespace Hooks
@@ -18,25 +18,27 @@ namespace Hooks
 
 	void SprintHandlerHook::ProcessButton(RE::SprintHandler* a_this, RE::ButtonEvent* a_event, RE::PlayerControlsData* a_data)
 	{
-		using FlagBDD = RE::PlayerCharacter::FlagBDD;
-
 		if (Settings::EnableSprintKeyDodge) {
 			auto playerCharacter = RE::PlayerCharacter::GetSingleton();
 			auto userEvent = a_event->QUserEvent();
 			auto userEvents = RE::UserEvents::GetSingleton();
 
 			if (userEvent == userEvents->sprint) {
-				if (a_event->IsDown() && (playerCharacter->unkBDD & FlagBDD::kSprinting) != FlagBDD::kNone) {  // stopping sprint
+				if (a_event->IsDown() && (playerCharacter->GetPlayerRuntimeData().playerFlags.isSprinting)) {  // stopping sprint
+					DEBUG("key pressesd while pc is sprinting - stopping sprint");
 					bStoppingSprint = true;
-				} else if (a_event->HeldDuration() < Settings::SprintingPressDuration) {//TODO:ADD THIS to settings
+				} else if (a_event->HeldDuration() < Settings::SprintingPressDuration) {  //TODO:ADD THIS to settings
 					if (a_event->IsUp()) {
+						DEBUG("key lifted and was pressed less then SprintingPressDuration - dodging");
 						TKRE::dodge();
 						bStoppingSprint = false;
 					}
 					return;
-				} else if (playerCharacter && (playerCharacter->unkBDD & FlagBDD::kSprinting) == FlagBDD::kNone && !bStoppingSprint) {
-					a_event->heldDownSecs = 0.f;
+				} else if (playerCharacter && (!playerCharacter->GetPlayerRuntimeData().playerFlags.isSprinting && !bStoppingSprint)) {
+					DEBUG("player not sprinting and StoopingSprint flag is false - ressetting heldDownSecs to 0");
+					a_event->GetRuntimeData().heldDownSecs = 0.f;
 				} else if (a_event->IsUp()) {
+					DEBUG("key lifted - resuming sprint");
 					bStoppingSprint = false;
 				}
 			}
