@@ -6,6 +6,8 @@ project(
 	LANGUAGES CXX
 )
 set(FORMATTED_NAME "TK Dodge NG")
+set(LICENSE "MIT License")
+set(AUTHOR "itahol")
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
