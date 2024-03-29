@@ -1,4 +1,6 @@
 #define DLLEXPORT __declspec(dllexport)
+#include "LoadGame.h"
+#include <DKUtil/Logger.hpp>
 
 void InitializeLog([[maybe_unused]] spdlog::level::level_enum a_level = spdlog::level::info)
 {
@@ -29,6 +31,15 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_s
 	InitializeLog();
 	logger::info("Loaded plugin {} {}", Plugin::NAME, Plugin::VERSION.string());
 	SKSE::Init(a_skse);
+
+	auto g_message = SKSE::GetMessagingInterface();
+	if (!g_message) {
+		ERROR("Messaging Interface Not Found!");
+		return false;
+	}
+
+	g_message->RegisterListener(TKDodge::EventCallback);
+
 	return true;
 }
 
