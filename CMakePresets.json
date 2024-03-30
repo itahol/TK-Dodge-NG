@@ -73,7 +73,7 @@
         "AUTO_PLUGIN_DEPLOYMENT": "ON"
       },
       "environment": {
-        "TK_DodgeRE_OutputDir": "C:\\Users\\Itamar\\AppData\\Local\\ModOrganizer\\SkyrimSE\\mods\\TK Dodge NG"
+        "TK_Dodge_RE_OutputDir": "C:\\Users\\Itamar\\AppData\\Local\\ModOrganizer\\SkyrimSE\\mods\\TK Dodge NG"
       },
       "inherits": "ALL"
     }
