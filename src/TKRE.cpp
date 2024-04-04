@@ -104,7 +104,7 @@ void TKRE::dodge()
 		return;
 	}
 	std::string dodge_event = Settings::defaultDodgeEvent;
-	if (!GetDodgeEvent(dodge_event))
+	if (!GetDodgeEvent(dodge_event) && !Settings::EnableDodgeInPlace)
 		return;
 
 	if (Settings::stepDodge) {
@@ -160,6 +160,7 @@ void Settings::readSettings()
 	ReadIntSetting(ini, "Main", "DodgeHotkey", dodgeKey);
 	ReadBoolSetting(ini, "Main", "EnableSprintKeyDodge", EnableSprintKeyDodge);
 	ReadBoolSetting(ini, "Main", "EnableSneakKeyDodge", EnableSneakKeyDodge);
+	ReadBoolSetting(ini, "Main", "EnableDodgeInPlace", EnableDodgeInPlace);
 	ReadBoolSetting(ini, "Main", "StepDodge", stepDodge);
 	ReadBoolSetting(ini, "Main", "enableDodgeAttackCancel", enableDodgeAttackCancel);
 	ReadFloatSetting(ini, "Main", "DodgeStamina", dodgeStamina);

@@ -30,6 +30,7 @@ public:
 	static inline std::uint32_t dodgeKey = 42;
 	static inline bool EnableSprintKeyDodge = false;
 	static inline bool EnableSneakKeyDodge = false;
+	static inline bool EnableDodgeInPlace = false;
 	static inline bool stepDodge = false;
 	static inline float dodgeStamina = 10.f;
 	static inline bool enableSneakDodge = false;
