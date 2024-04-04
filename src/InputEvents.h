@@ -1,7 +1,6 @@
 #pragma once
 #include <DKUtil/Logger.hpp>
 
-
 using EventResult = RE::BSEventNotifyControl;
 
 class InputEventHandler : public RE::BSTEventSink<RE::InputEvent*>
@@ -30,9 +29,8 @@ private:
 	virtual ~InputEventHandler() = default;
 
 	InputEventHandler& operator=(const InputEventHandler&) = delete;
-	InputEventHandler& operator=(InputEventHandler&&) = delete;	
+	InputEventHandler& operator=(InputEventHandler&&) = delete;
 
-		
 	static std::uint32_t GetGamepadIndex(RE::BSWin32GamepadDevice::Key a_key);
 	inline void offsetButtonEventID(RE::ButtonEvent* a_event, uint32_t& id);
 	inline uint32_t getOffsetButtonIDCode(RE::ButtonEvent* a_event);
@@ -42,7 +40,7 @@ private:
 		kInvalid = static_cast<uint32_t>(-1),
 		kKeyboardOffset = 0,
 		kMouseOffset = 256,
+		kMouseBtn3 = 259,
 		kGamepadOffset = 266
 	};
 };
-
