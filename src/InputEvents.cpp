@@ -1,6 +1,6 @@
 #include "InputEvents.h"
-#include "TKRE.h"
 #include "AnimationEvents.h"
+#include "TKRE.h"
 
 std::uint32_t InputEventHandler::GetGamepadIndex(RE::BSWin32GamepadDevice::Key a_key)
 {
@@ -70,6 +70,10 @@ void InputEventHandler::offsetButtonEventID(RE::ButtonEvent* a_event, uint32_t& 
 	switch (a_event->device.get()) {
 	case DeviceType::kMouse:
 		id += kMouseOffset;
+		// key code 259 isn't real (it should be mouse button 3 but that's 258) - so we want to skip it
+		if (id >= kMouseBtn3) {
+			id++;
+		}
 		break;
 	case DeviceType::kKeyboard:
 		id += kKeyboardOffset;
@@ -87,6 +91,10 @@ inline uint32_t InputEventHandler::getOffsetButtonIDCode(RE::ButtonEvent* a_even
 	switch (a_event->device.get()) {
 	case DeviceType::kMouse:
 		id += kMouseOffset;
+		// key code 259 isn't real (it should be mouse button 3 but that's 258) - so we want to skip it
+		if (id >= kMouseBtn3) {
+			id++;
+		}
 		break;
 	case DeviceType::kKeyboard:
 		id += kKeyboardOffset;
@@ -98,20 +106,18 @@ inline uint32_t InputEventHandler::getOffsetButtonIDCode(RE::ButtonEvent* a_even
 	return id;
 }
 
-
-
 EventResult InputEventHandler::ProcessEvent(RE::InputEvent* const* a_event, RE::BSTEventSource<RE::InputEvent*>*)
 {
 	using EventType = RE::INPUT_EVENT_TYPE;
-	
-	if (!a_event) 
+
+	if (!a_event)
 		return EventResult::kContinue;
 
 	const auto ui = RE::UI::GetSingleton();
 	if (ui->GameIsPaused()) {
 		return EventResult::kContinue;
 	}
-	
+
 	const auto ctrlMap = RE::ControlMap::GetSingleton();
 	if (!ctrlMap || ctrlMap->GetRuntimeData().contextPriorityStack.back() != RE::UserEvents::INPUT_CONTEXT_ID::kGameplay)
 		return EventResult::kContinue;
@@ -132,13 +138,7 @@ EventResult InputEventHandler::ProcessEvent(RE::InputEvent* const* a_event, RE::
 		if (getOffsetButtonIDCode(button) == Settings::dodgeKey) {
 			TKRE::dodge();
 		}
-
 	}
 
 	return EventResult::kContinue;
 }
-
-
-
-
-
