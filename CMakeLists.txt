@@ -34,7 +34,7 @@ find_package(magic_enum CONFIG REQUIRED)
 find_package(xbyak CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_path(CLIB_UTIL_INCLUDE_DIRS "ClibUtil/utils.hpp")
-add_subdirectory("extern/DKUtil" DKUtil)
+add_subdirectory("extern/DKUtil" DKUtil EXCLUDE_FROM_ALL)
 
 target_include_directories(
 	${PROJECT_NAME}
@@ -71,6 +71,26 @@ if(MSVC_VERSION GREATER_EQUAL 1936 AND MSVC_IDE) # 17.6+
 ]==] @ONLY)
 endif()
 
+if(ZIP_TO_DIST)
+    message("Making a zip for distribution")
+    set(CPACK_GENERATOR "7Z")  # Use the 7z generator
+    set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}")  # Set the name of the generated package
+    set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)  # Do not include top-level directory in the package
+    install(FILES "$<TARGET_FILE:${PROJECT_NAME}>" DESTINATION "SKSE/Plugins")
+    install(FILES "$<TARGET_PDB_FILE:${PROJECT_NAME}> " DESTINATION "SKSE/Plugins")
+    install(FILES "${CMAKE_SOURCE_DIR}/TK Dodge RE.ini" DESTINATION "SKSE/Plugins")
+    include(CPack)
+
+    # Run CPack after the build
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E echo "Packaging for distribution..."
+        COMMAND ${CMAKE_COMMAND} -E echo "CPack configuration: ${CPACK_GENERATOR}"
+        COMMAND cpack --config ${CMAKE_BINARY_DIR}/CPackConfig.cmake
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Packaging for distribution..."
+    )
+endif()
+
 # #######################################################################################################################
 # # Automatic deployment
 # #######################################################################################################################
@@ -80,6 +100,7 @@ if(AUTO_PLUGIN_DEPLOYMENT)
 		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> "${DEPLOY_TARGET}/SKSE/Plugins/"
 			COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:${PROJECT_NAME}> "${DEPLOY_TARGET}/SKSE/Plugins/"
+			COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/TK Dodge RE.ini" "${DEPLOY_TARGET}/SKSE/Plugins/"
 		)
 	endforeach()
 

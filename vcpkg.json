@@ -1,8 +1,8 @@
 {
-  "name": "sampleplugin",
-  "version-semver": "0.7.4",
+  "name": "tk-dodge-ng",
+  "version-semver": "1.0.0",
   "description": "",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "dependencies": [
     "fmt",
     "directxtk",
